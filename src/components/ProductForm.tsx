@@ -19,23 +19,21 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { TagInput } from '@/components/TagInput';
 import type { Product, Category } from '@prisma/client';
-import { Loader2, Trash } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 
 const productFormSchema = z.object({
   name: z.string().min(3, 'Name must be at least 3 characters.'),
   description: z.string().min(10, 'Description must be at least 10 characters.'),
   price: z.coerce.number().positive('Price must be a positive number.'),
-  image: z.instanceof(File).refine(file => file.size > 0, 'Please select an image.'),
-  categoryId: z.string(),
+  image: z.instanceof(File).optional(),
+  categoryId: z.string().min(1, 'Please select a category.'),
 });
 
 type ProductFormValues = z.infer<typeof productFormSchema>;
@@ -60,12 +58,19 @@ function SubmitButton({ text }: { text: string }) {
 export function ProductForm({ product, action, submitButtonText, categories }: ProductFormProps) {
   const router = useRouter();
   const form = useForm<ProductFormValues>({
-    resolver: zodResolver(productFormSchema),
+    resolver: zodResolver(
+      // Image is required for new products, but optional for existing products
+      product
+        ? productFormSchema
+        : productFormSchema.refine((data) => data.image && data.image.size > 0, {
+            message: 'Please select an image.',
+            path: ['image'],
+          })
+    ),
     defaultValues: {
       name: product?.name ?? '',
       description: product?.description ?? '',
       price: product?.price ?? 0,
-      image: new File([], ''),
       categoryId: product?.categoryId ?? '',
     },
   });
@@ -97,7 +102,9 @@ export function ProductForm({ product, action, submitButtonText, categories }: P
           formData.append('name', values.name);
           formData.append('description', values.description);
           formData.append('price', String(values.price));
-          formData.append('image', values.image);
+          if (values.image) {
+            formData.append('image', values.image);
+          }
           formData.append('categoryId', values.categoryId);
           formAction(formData);
         })}
@@ -142,7 +149,7 @@ export function ProductForm({ product, action, submitButtonText, categories }: P
                  <FormField
                   control={form.control}
                   name="image"
-                  render={({ field: { onChange, ...props} }) => (
+                  render={({ field: { onChange, value, ...rest } }) => (
                     <FormItem>
                       <FormLabel>Product Image</FormLabel>
                       <FormControl>
@@ -155,7 +162,7 @@ export function ProductForm({ product, action, submitButtonText, categories }: P
                               onChange(file);
                             }
                           }}
-                          {...props}
+                          {...rest}
                         />
                       </FormControl>
                       <FormMessage />

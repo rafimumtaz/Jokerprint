@@ -15,8 +15,8 @@ const ProductFormSchema = z.object({
   name: z.string().min(3, { message: "Name must be at least 3 characters."}),
   description: z.string().min(10, { message: "Description must be at least 10 characters."}),
   price: z.coerce.number().positive({ message: "Price must be a positive number."}),
-  image: z.instanceof(File).refine(file => file.size > 0, 'Please select an image.'),
-  categoryId: z.string(),
+  image: z.instanceof(File).optional(),
+  categoryId: z.string().min(1, { message: "Please select a category."}),
 });
 
 const CategoryFormSchema = z.object({
@@ -24,6 +24,10 @@ const CategoryFormSchema = z.object({
 });
 
 async function uploadImage(image: File) {
+  if (image.size === 0) {
+    return null;
+  }
+
   const bytes = await image.arrayBuffer();
   const buffer = Buffer.from(bytes);
   const extension = image.name.split('.').pop();
@@ -78,6 +82,9 @@ export async function createProduct(formData: FormData) {
   }
 
   const { name, description, price, image, categoryId } = validatedFields.data;
+  if (!image || image.size === 0) {
+    throw new Error('Image is required.');
+  }
   const imageUrl = await uploadImage(image);
 
   await prisma.product.create({
@@ -85,7 +92,7 @@ export async function createProduct(formData: FormData) {
       name,
       description,
       price,
-      imageUrl,
+      imageUrl: imageUrl!,
       categoryId,
     },
   });
@@ -108,7 +115,11 @@ export async function updateProduct(id: string, formData: FormData) {
   }
 
   const { name, description, price, image, categoryId } = validatedFields.data;
-  const imageUrl = await uploadImage(image);
+
+  let imageUrl: string | undefined = undefined;
+  if (image && image.size > 0) {
+    imageUrl = await uploadImage(image);
+  }
 
   await prisma.product.update({
     where: { id },
@@ -116,7 +127,7 @@ export async function updateProduct(id: string, formData: FormData) {
       name,
       description,
       price,
-      imageUrl,
+      imageUrl: imageUrl || product.imageUrl,
       categoryId,
     },
   });
