@@ -1,3 +1,46 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "photocopier",
+      "description": "A modern office photocopier",
+      "imageUrl": "https://images.unsplash.com/photo-1732881111920-fc14aa15f66e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxwaG90b2NvcGllciUyMG1hY2hpbmV8ZW58MHx8fHwxNzYyODQxMzA5fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "photocopier machine"
+    },
+    {
+      "id": "color-printing",
+      "description": "Stacks of colored paper",
+      "imageUrl": "https://images.unsplash.com/photo-1472289065668-ce650ac443d2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjb2xvciUyMHBhcGVyfGVufDB8fHx8MTc2Mjg0MTMwOXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "color paper"
+    },
+    {
+      "id": "lamination-machine",
+      "description": "A document being laminated",
+      "imageUrl": "https://images.unsplash.com/photo-1668871100416-1a4c90acd0ff?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxsYW1pbmF0aW9uJTIwbWFjaGluZXxlbnwwfHx8fDE3NjI4NDEzMDl8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "lamination machine"
+    },
+    {
+      "id": "book-binding",
+      "description": "A stack of freshly bound books",
+      "imageUrl": "https://images.unsplash.com/photo-1756148977232-818cb513f248?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxib29rJTIwYmluZGluZ3xlbnwwfHx8fDE3NjI4NDEzMDl8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "book binding"
+    },
+    {
+      "id": "passport-photo",
+      "description": "A camera for taking passport photos",
+      "imageUrl": "https://images.unsplash.com/photo-1729857001644-ade54ca81f53?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxjYW1lcmElMjBwaG90b2dyYXBoeXxlbnwwfHx8fDE3NjI4NDEzMDl8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "camera photography"
+    },
+    {
+      "id": "office-supplies",
+      "description": "A collection of office supplies like pens and paperclips",
+      "imageUrl": "https://images.unsplash.com/photo-1628621317388-6ebde0c18574?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxvZmZpY2UlMjBzdXBwbGllc3xlbnwwfHx8fDE3NjI4MzM0NDF8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "office supplies"
+    },
+    {
+      "id": "default",
+      "description": "Generic office setting",
+      "imageUrl": "https://images.unsplash.com/photo-1589362281138-e3f7ebe47f1a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxvZmZpY2UlMjBkZXNrfGVufDB8fHx8MTc2MjgxNTU5Nnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "office desk"
+    }
+  ]
 }
