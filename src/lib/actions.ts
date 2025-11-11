@@ -137,6 +137,11 @@ export async function updateProduct(id: string, formData: FormData) {
   redirect('/');
 }
 
+export async function deleteProduct(id: string) {
+  await prisma.product.delete({ where: { id } });
+  revalidatePath('/');
+}
+
 export async function getCategories(): Promise<Category[]> {
   return prisma.category.findMany();
 }
