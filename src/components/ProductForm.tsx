@@ -34,7 +34,7 @@ const productFormSchema = z.object({
   name: z.string().min(3, 'Name must be at least 3 characters.'),
   description: z.string().min(10, 'Description must be at least 10 characters.'),
   price: z.coerce.number().positive('Price must be a positive number.'),
-  imageUrl: z.string().url('Please enter a valid URL.'),
+  image: z.instanceof(File).refine(file => file.size > 0, 'Please select an image.'),
   categoryId: z.string(),
 });
 
@@ -61,15 +61,13 @@ export function ProductForm({ product, action, submitButtonText, categories }: P
   const router = useRouter();
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productFormSchema),
-    defaultValues: product
-      ? { ...product }
-      : {
-          name: '',
-          description: '',
-          price: 0,
-          imageUrl: '',
-          categoryId: '',
-        },
+    defaultValues: {
+      name: product?.name ?? '',
+      description: product?.description ?? '',
+      price: product?.price ?? 0,
+      image: new File([], ''),
+      categoryId: product?.categoryId ?? '',
+    },
   });
 
   const formAction = async (formData: FormData) => {
@@ -99,7 +97,7 @@ export function ProductForm({ product, action, submitButtonText, categories }: P
           formData.append('name', values.name);
           formData.append('description', values.description);
           formData.append('price', String(values.price));
-          formData.append('imageUrl', values.imageUrl);
+          formData.append('image', values.image);
           formData.append('categoryId', values.categoryId);
           formAction(formData);
         })}
@@ -143,12 +141,22 @@ export function ProductForm({ product, action, submitButtonText, categories }: P
                 />
                  <FormField
                   control={form.control}
-                  name="imageUrl"
-                  render={({ field }) => (
+                  name="image"
+                  render={({ field: { onChange, ...props} }) => (
                     <FormItem>
-                      <FormLabel>Image URL</FormLabel>
+                      <FormLabel>Product Image</FormLabel>
                       <FormControl>
-                        <Input placeholder="https://example.com/image.png" {...field} />
+                        <Input
+                          type="file"
+                          accept="image/*"
+                          onChange={(event) => {
+                            const file = event.target.files?.[0];
+                            if (file) {
+                              onChange(file);
+                            }
+                          }}
+                          {...props}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

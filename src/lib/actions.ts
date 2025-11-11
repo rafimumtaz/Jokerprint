@@ -7,18 +7,35 @@ import { redirect } from 'next/navigation';
 import prisma from './prisma';
 import { semanticProductSearch } from '@/ai/flows/semantic-product-search';
 import { Product, Category } from '@prisma/client';
+import { writeFile, mkdir } from 'fs/promises';
+import { join } from 'path';
+import { randomUUID } from 'crypto';
 
 const ProductFormSchema = z.object({
   name: z.string().min(3, { message: "Name must be at least 3 characters."}),
   description: z.string().min(10, { message: "Description must be at least 10 characters."}),
   price: z.coerce.number().positive({ message: "Price must be a positive number."}),
-  imageUrl: z.string().url({ message: "Please enter a valid URL." }),
+  image: z.instanceof(File).refine(file => file.size > 0, 'Please select an image.'),
   categoryId: z.string(),
 });
 
 const CategoryFormSchema = z.object({
   name: z.string().min(3, { message: "Name must be at least 3 characters." }),
 });
+
+async function uploadImage(image: File) {
+  const bytes = await image.arrayBuffer();
+  const buffer = Buffer.from(bytes);
+  const extension = image.name.split('.').pop();
+  const filename = `${randomUUID()}.${extension}`;
+  const uploadDir = join(process.cwd(), 'public', 'uploads');
+  const path = join(uploadDir, filename);
+
+  await mkdir(uploadDir, { recursive: true });
+  await writeFile(path, buffer);
+
+  return `/uploads/${filename}`;
+}
 
 // Get all products, with optional AI-powered search
 export async function getProducts(query?: string): Promise<Product[]> {
@@ -60,7 +77,8 @@ export async function createProduct(formData: FormData) {
     throw new Error('Invalid product data.');
   }
 
-  const { name, description, price, imageUrl, categoryId } = validatedFields.data;
+  const { name, description, price, image, categoryId } = validatedFields.data;
+  const imageUrl = await uploadImage(image);
 
   await prisma.product.create({
     data: {
@@ -89,7 +107,8 @@ export async function updateProduct(id: string, formData: FormData) {
     throw new Error('Invalid product data.');
   }
 
-  const { name, description, price, imageUrl, categoryId } = validatedFields.data;
+  const { name, description, price, image, categoryId } = validatedFields.data;
+  const imageUrl = await uploadImage(image);
 
   await prisma.product.update({
     where: { id },
