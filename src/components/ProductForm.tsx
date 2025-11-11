@@ -10,6 +10,13 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
   Form,
   FormControl,
   FormDescription,
@@ -19,7 +26,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { TagInput } from '@/components/TagInput';
-import type { Product } from '@/lib/types';
+import type { Product, Category } from '@prisma/client';
 import { Loader2, Trash } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 
@@ -27,8 +34,8 @@ const productFormSchema = z.object({
   name: z.string().min(3, 'Name must be at least 3 characters.'),
   description: z.string().min(10, 'Description must be at least 10 characters.'),
   price: z.coerce.number().positive('Price must be a positive number.'),
-  tags: z.array(z.string()).min(1, 'Please add at least one tag.'),
-  images: z.array(z.string().url('Each image must be a valid URL.')).min(1, 'Please add at least one image URL.'),
+  imageUrl: z.string().url('Please enter a valid URL.'),
+  categoryId: z.string(),
 });
 
 type ProductFormValues = z.infer<typeof productFormSchema>;
@@ -37,6 +44,7 @@ type ProductFormProps = {
   product?: Product;
   action: (formData: FormData) => Promise<void>;
   submitButtonText: string;
+  categories: Category[];
 };
 
 function SubmitButton({ text }: { text: string }) {
@@ -49,7 +57,7 @@ function SubmitButton({ text }: { text: string }) {
   );
 }
 
-export function ProductForm({ product, action, submitButtonText }: ProductFormProps) {
+export function ProductForm({ product, action, submitButtonText, categories }: ProductFormProps) {
   const router = useRouter();
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productFormSchema),
@@ -59,8 +67,8 @@ export function ProductForm({ product, action, submitButtonText }: ProductFormPr
           name: '',
           description: '',
           price: 0,
-          tags: [],
-          images: [],
+          imageUrl: '',
+          categoryId: '',
         },
   });
 
@@ -91,8 +99,8 @@ export function ProductForm({ product, action, submitButtonText }: ProductFormPr
           formData.append('name', values.name);
           formData.append('description', values.description);
           formData.append('price', String(values.price));
-          formData.append('tags', values.tags.join(','));
-          formData.append('images', values.images.join(','));
+          formData.append('imageUrl', values.imageUrl);
+          formData.append('categoryId', values.categoryId);
           formAction(formData);
         })}
       >
@@ -133,6 +141,19 @@ export function ProductForm({ product, action, submitButtonText }: ProductFormPr
                     </FormItem>
                   )}
                 />
+                 <FormField
+                  control={form.control}
+                  name="imageUrl"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Image URL</FormLabel>
+                      <FormControl>
+                        <Input placeholder="https://example.com/image.png" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </CardContent>
             </Card>
           </div>
@@ -157,61 +178,24 @@ export function ProductForm({ product, action, submitButtonText }: ProductFormPr
                 />
                 <FormField
                   control={form.control}
-                  name="tags"
+                  name="categoryId"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Tags</FormLabel>
-                      <FormControl>
-                        <TagInput placeholder="Add a tag..." {...field} />
-                      </FormControl>
-                      <FormDescription>Press Enter to add a new tag.</FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </CardContent>
-            </Card>
-             <Card>
-              <CardHeader>
-                <CardTitle>Images</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <FormField
-                  control={form.control}
-                  name="images"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Image URLs</FormLabel>
-                        <div className="space-y-2">
-                          {field.value.map((url, index) => (
-                            <div key={index} className="flex items-center gap-2">
-                               <Input
-                                value={url}
-                                onChange={(e) => {
-                                    const newImages = [...field.value];
-                                    newImages[index] = e.target.value;
-                                    field.onChange(newImages);
-                                }}
-                                placeholder="https://example.com/image.png"
-                               />
-                               <Button
-                                type="button"
-                                variant="ghost"
-                                size="icon"
-                                onClick={() => field.onChange(field.value.filter((_, i) => i !== index))}
-                               >
-                                  <Trash className="h-4 w-4" />
-                               </Button>
-                            </div>
+                      <FormLabel>Category</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select a category" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {categories.map((category) => (
+                            <SelectItem key={category.id} value={category.id}>
+                              {category.name}
+                            </SelectItem>
                           ))}
-                          <Button
-                           type="button"
-                           variant="outline"
-                           onClick={() => field.onChange([...field.value, ''])}
-                          >
-                            Add Image URL
-                          </Button>
-                        </div>
+                        </SelectContent>
+                      </Select>
                       <FormMessage />
                     </FormItem>
                   )}

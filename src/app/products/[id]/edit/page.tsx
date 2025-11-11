@@ -1,4 +1,4 @@
-import { getProductById, updateProduct } from '@/lib/actions';
+import { getProductById, updateProduct, getCategories } from '@/lib/actions';
 import { ProductForm } from '@/components/ProductForm';
 import { notFound } from 'next/navigation';
 
@@ -8,7 +8,10 @@ type EditProductPageProps = {
 
 export default async function EditProductPage({ params }: EditProductPageProps) {
   const { id } = params;
-  const product = await getProductById(id);
+  const [product, categories] = await Promise.all([
+    getProductById(id),
+    getCategories(),
+  ]);
 
   if (!product) {
     notFound();
@@ -26,6 +29,7 @@ export default async function EditProductPage({ params }: EditProductPageProps) 
         product={product} 
         action={updateProductWithId}
         submitButtonText="Update Product"
+        categories={categories}
       />
     </div>
   );

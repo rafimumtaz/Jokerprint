@@ -40,3 +40,28 @@ The project is organized into the following directories:
   - **`lib/`**: This directory contains the utility functions and other shared code for the application.
 - **`public/`**: This directory contains the static assets for the application, such as images and fonts.
 - **`docs/`**: This directory contains the documentation for the project.
+
+## Database Schema
+
+The database schema is defined in the `prisma/schema.prisma` file. It consists of the following models:
+
+### `Product`
+
+| Column      | Type     | Description                               |
+|-------------|----------|-------------------------------------------|
+| `id`        | `String` | A unique identifier for the product.      |
+| `name`        | `String` | The name of the product.                  |
+| `description` | `String` | A description of the product.             |
+| `price`       | `Float`  | The price of the product.                 |
+| `imageUrl`    | `String` | The URL of the product image.             |
+| `createdAt`   | `DateTime`| The date and time the product was created.|
+| `updatedAt`   | `DateTime`| The date and time the product was last updated.|
+| `categoryId`  | `String` | A foreign key referencing the `Category` model.|
+
+### `Category`
+
+| Column   | Type      | Description                               |
+|----------|-----------|-------------------------------------------|
+| `id`     | `String`  | A unique identifier for the category.     |
+| `name`   | `String`  | The name of the category.                 |
+| `products`| `Product[]`| A list of products in this category.      |
