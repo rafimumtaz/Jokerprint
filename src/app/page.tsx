@@ -42,7 +42,7 @@ async function ProductGrid({ query }: { query?: string }) {
   );
 }
 
-export default function Home({
+export default async function Home({
   searchParams,
 }: {
   searchParams?: { query?: string };
