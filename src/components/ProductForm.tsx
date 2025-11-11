@@ -183,9 +183,9 @@ export function ProductForm({ product, action, submitButtonText, categories }: P
                   name="price"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Price ($)</FormLabel>
+                      <FormLabel>Price (IDR)</FormLabel>
                       <FormControl>
-                        <Input type="number" step="0.01" placeholder="9.99" {...field} />
+                        <Input type="number" step="1" placeholder="15000" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
