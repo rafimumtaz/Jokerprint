@@ -42,7 +42,7 @@ export default function Header() {
               strokeWidth="16"
             />
           </svg>
-          <span className="font-headline text-xl font-bold">Joker Catalog</span>
+          <span className="font-headline text-xl font-bold">JokerDigiPrint</span>
         </Link>
         <div className="flex flex-1 items-center justify-end">
           <Button asChild>
