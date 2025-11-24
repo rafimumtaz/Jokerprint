@@ -1,8 +1,16 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { PlusCircle } from 'lucide-react';
+import { auth, signOut } from '@/lib/auth';
 
-export default function Header() {
+export default async function Header() {
+  const session = await auth();
+
+  const handleLogout = async () => {
+    'use server';
+    await signOut();
+  };
+
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center">
@@ -42,15 +50,31 @@ export default function Header() {
               strokeWidth="16"
             />
           </svg>
-          <span className="font-headline text-xl font-bold">JokerDigiPrint</span>
+          <span className="font-headline text-xl font-bold">Joker Catalog</span>
         </Link>
-        <div className="flex flex-1 items-center justify-end">
-          <Button asChild>
-            <Link href="/products/new">
-              <PlusCircle className="mr-2 h-4 w-4" />
-              New Product
-            </Link>
-          </Button>
+        <div className="flex flex-1 items-center justify-end space-x-4">
+          {session?.user?.role === 'ADMIN' && (
+            <Button asChild>
+              <Link href="/products/new">
+                <PlusCircle className="mr-2 h-4 w-4" />
+                New Product
+              </Link>
+            </Button>
+          )}
+          {session ? (
+            <form action={handleLogout}>
+              <Button type="submit">Logout</Button>
+            </form>
+          ) : (
+            <>
+              <Button asChild variant="ghost">
+                <Link href="/login">Login</Link>
+              </Button>
+              <Button asChild>
+                <Link href="/register">Register</Link>
+              </Button>
+            </>
+          )}
         </div>
       </div>
     </header>

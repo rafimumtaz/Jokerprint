@@ -3,7 +3,7 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
-  title: 'JokerDigiPrint',
+  title: 'Joker Catalog',
   description: 'Product Catalog for Joker Photocopy Shop',
 };
 

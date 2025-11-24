@@ -10,6 +10,8 @@ import { Product, Category } from '@prisma/client';
 import { writeFile, mkdir } from 'fs/promises';
 import { join } from 'path';
 import { randomUUID } from 'crypto';
+import { hash } from 'bcrypt';
+import { auth } from '@/lib/auth';
 
 const ProductFormSchema = z.object({
   name: z.string().min(3, { message: "Name must be at least 3 characters."}),
@@ -22,6 +24,12 @@ const ProductFormSchema = z.object({
 const CategoryFormSchema = z.object({
   name: z.string().min(3, { message: "Name must be at least 3 characters." }),
 });
+
+const RegisterFormSchema = z.object({
+  email: z.string().email({ message: 'Please enter a valid email.' }),
+  password: z.string().min(6, { message: 'Password must be at least 6 characters.' }),
+});
+
 
 async function uploadImage(image: File) {
   if (image.size === 0) {
@@ -74,6 +82,11 @@ export async function getProductById(id: string): Promise<Product | null> {
 }
 
 export async function createProduct(formData: FormData) {
+  const session = await auth();
+  if (session?.user?.role !== 'ADMIN') {
+    throw new Error('Unauthorized');
+  }
+
   const validatedFields = ProductFormSchema.safeParse(Object.fromEntries(formData.entries()));
 
   if (!validatedFields.success) {
@@ -102,6 +115,11 @@ export async function createProduct(formData: FormData) {
 }
 
 export async function updateProduct(id: string, formData: FormData) {
+  const session = await auth();
+  if (session?.user?.role !== 'ADMIN') {
+    throw new Error('Unauthorized');
+  }
+
   const product = await getProductById(id);
   if (!product) {
     throw new Error('Product not found.');
@@ -138,6 +156,11 @@ export async function updateProduct(id: string, formData: FormData) {
 }
 
 export async function deleteProduct(id: string) {
+  const session = await auth();
+  if (session?.user?.role !== 'ADMIN') {
+    throw new Error('Unauthorized');
+  }
+
   await prisma.product.delete({ where: { id } });
   revalidatePath('/');
 }
@@ -147,6 +170,11 @@ export async function getCategories(): Promise<Category[]> {
 }
 
 export async function createCategory(formData: FormData) {
+  const session = await auth();
+  if (session?.user?.role !== 'ADMIN') {
+    throw new Error('Unauthorized');
+  }
+
   const validatedFields = CategoryFormSchema.safeParse(Object.fromEntries(formData.entries()));
 
   if (!validatedFields.success) {
@@ -163,4 +191,27 @@ export async function createCategory(formData: FormData) {
   });
 
   revalidatePath('/products/new');
+}
+
+export async function register(formData: FormData) {
+  const validatedFields = RegisterFormSchema.safeParse(
+    Object.fromEntries(formData.entries())
+  );
+
+  if (!validatedFields.success) {
+    console.error('Validation errors:', validatedFields.error.flatten().fieldErrors);
+    throw new Error('Invalid user data.');
+  }
+
+  const { email, password } = validatedFields.data;
+  const hashedPassword = await hash(password, 10);
+
+  await prisma.user.create({
+    data: {
+      email,
+      password: hashedPassword,
+    },
+  });
+
+  redirect('/login');
 }

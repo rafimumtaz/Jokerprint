@@ -6,10 +6,7 @@ This is a sample e-commerce application built with Next.js, Genkit, and Radix UI
 
 To get started with this project, you'll need to have Node.js and npm installed on your machine.
 
-1. **Clone the repository:**
-   ```bash
-   git clone
-   ```
+1. **Clone the repository.**
 2. **Install the dependencies:**
    ```bash
    npm install
