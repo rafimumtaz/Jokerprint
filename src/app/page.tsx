@@ -4,7 +4,7 @@ import ProductCard from '@/components/ProductCard';
 import { Search } from '@/components/Search';
 import { getProducts } from '@/lib/actions';
 import { Skeleton } from '@/components/ui/skeleton';
-import { auth } from '@/lib/auth';
+import { getSession } from '@/lib/auth';
 import { Session } from 'next-auth';
 
 function ProductGridSkeleton() {
@@ -64,7 +64,7 @@ export default async function Home({
   searchParams?: { query?: string };
 }) {
   const query = searchParams?.query || '';
-  const session = await auth();
+  const session = await getSession();
 
   return (
     <div className="flex min-h-screen w-full flex-col">

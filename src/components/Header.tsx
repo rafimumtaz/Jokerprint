@@ -1,14 +1,15 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { PlusCircle } from 'lucide-react';
-import { auth, signOut } from '@/lib/auth';
+import { getSession } from '@/lib/auth';
+import { signOut } from 'next-auth/react';
 
 export default async function Header() {
-  const session = await auth();
+  const session = await getSession();
 
   const handleLogout = async () => {
     'use server';
-    await signOut();
+    await signOut({ redirectTo: '/' });
   };
 
   return (

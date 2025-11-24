@@ -11,7 +11,7 @@ import { writeFile, mkdir } from 'fs/promises';
 import { join } from 'path';
 import { randomUUID } from 'crypto';
 import { hash } from 'bcrypt';
-import { auth } from '@/lib/auth';
+import { getSession } from '@/lib/auth';
 
 const ProductFormSchema = z.object({
   name: z.string().min(3, { message: "Name must be at least 3 characters."}),
@@ -82,7 +82,7 @@ export async function getProductById(id: string): Promise<Product | null> {
 }
 
 export async function createProduct(formData: FormData) {
-  const session = await auth();
+  const session = await getSession();
   if (session?.user?.role !== 'ADMIN') {
     throw new Error('Unauthorized');
   }
@@ -115,7 +115,7 @@ export async function createProduct(formData: FormData) {
 }
 
 export async function updateProduct(id: string, formData: FormData) {
-  const session = await auth();
+  const session = await getSession();
   if (session?.user?.role !== 'ADMIN') {
     throw new Error('Unauthorized');
   }
@@ -156,7 +156,7 @@ export async function updateProduct(id: string, formData: FormData) {
 }
 
 export async function deleteProduct(id: string) {
-  const session = await auth();
+  const session = await getSession();
   if (session?.user?.role !== 'ADMIN') {
     throw new Error('Unauthorized');
   }
@@ -170,7 +170,7 @@ export async function getCategories(): Promise<Category[]> {
 }
 
 export async function createCategory(formData: FormData) {
-  const session = await auth();
+  const session = await getSession();
   if (session?.user?.role !== 'ADMIN') {
     throw new Error('Unauthorized');
   }
@@ -193,17 +193,26 @@ export async function createCategory(formData: FormData) {
   revalidatePath('/products/new');
 }
 
-export async function register(formData: FormData) {
+export async function register(
+  formData: FormData
+): Promise<{ error: string } | void> {
   const validatedFields = RegisterFormSchema.safeParse(
     Object.fromEntries(formData.entries())
   );
 
   if (!validatedFields.success) {
-    console.error('Validation errors:', validatedFields.error.flatten().fieldErrors);
-    throw new Error('Invalid user data.');
+    return {
+      error: validatedFields.error.flatten().fieldErrors.password?.[0] || 'Invalid user data.',
+    };
   }
 
   const { email, password } = validatedFields.data;
+
+  const existingUser = await prisma.user.findUnique({ where: { email } });
+  if (existingUser) {
+    return { error: 'User with this email already exists.' };
+  }
+
   const hashedPassword = await hash(password, 10);
 
   await prisma.user.create({
