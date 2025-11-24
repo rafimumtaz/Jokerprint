@@ -2,15 +2,10 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { PlusCircle } from 'lucide-react';
 import { getSession } from '@/lib/auth';
-import { signOut } from 'next-auth/react';
+import LogoutButton from './LogoutButton';
 
 export default async function Header() {
   const session = await getSession();
-
-  const handleLogout = async () => {
-    'use server';
-    await signOut({ redirectTo: '/' });
-  };
 
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -63,9 +58,7 @@ export default async function Header() {
             </Button>
           )}
           {session ? (
-            <form action={handleLogout}>
-              <Button type="submit">Logout</Button>
-            </form>
+            <LogoutButton />
           ) : (
             <>
               <Button asChild variant="ghost">
