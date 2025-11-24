@@ -46,7 +46,7 @@ export default async function Header() {
               strokeWidth="16"
             />
           </svg>
-          <span className="font-headline text-xl font-bold">Joker Catalog</span>
+          <span className="font-headline text-xl font-bold">JokerDigiPrint</span>
         </Link>
         <div className="flex flex-1 items-center justify-end space-x-4">
           {session?.user?.role === 'ADMIN' && (

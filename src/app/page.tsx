@@ -89,7 +89,7 @@ export default async function Home({
         </Suspense>
       </main>
       <footer className="py-6 text-center text-sm text-muted-foreground">
-        © {new Date().getFullYear()} Joker Catalog. All rights reserved.
+        © {new Date().getFullYear()} JokerDigiPrint. All rights reserved.
       </footer>
     </div>
   );
