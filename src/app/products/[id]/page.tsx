@@ -8,11 +8,12 @@ import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 
 type ProductDetailPageProps = {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 };
 
 export default async function ProductDetailPage({ params }: ProductDetailPageProps) {
-  const { id } = params;
+  const resolvedParams = await params;
+  const { id } = resolvedParams;
   const product = await getProductById(id);
 
   if (!product) {
@@ -48,7 +49,10 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
           </div>
         </CardHeader>
         <CardContent className="p-6">
-          <CardTitle className="mb-4 font-headline text-3xl md:text-4xl">{product.name}</CardTitle>
+          <CardTitle className="mb-2 font-headline text-3xl md:text-4xl">{product.name}</CardTitle>
+          <Badge variant="secondary" className="mb-4 text-sm font-normal">
+            {product.category.name}
+          </Badge>
           <p className="text-muted-foreground">{product.description}</p>
         </CardContent>
       </Card>

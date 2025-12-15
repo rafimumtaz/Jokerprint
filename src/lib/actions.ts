@@ -78,8 +78,11 @@ export async function getProducts(query?: string): Promise<Product[]> {
   return prisma.product.findMany();
 }
 
-export async function getProductById(id: string): Promise<Product | null> {
-  return prisma.product.findUnique({ where: { id } });
+export async function getProductById(id: string): Promise<(Product & { category: Category }) | null> {
+  return prisma.product.findUnique({
+    where: { id },
+    include: { category: true },
+  });
 }
 
 export async function createProduct(formData: FormData) {
