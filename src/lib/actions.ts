@@ -19,6 +19,7 @@ const ProductFormSchema = z.object({
   price: z.coerce.number().positive({ message: "Price must be a positive number."}),
   image: z.instanceof(File).optional(),
   categoryId: z.string().min(1, { message: "Please select a category."}),
+  status: z.string().optional(),
 });
 
 const CategoryFormSchema = z.object({
@@ -94,7 +95,7 @@ export async function createProduct(formData: FormData) {
     throw new Error('Invalid product data.');
   }
 
-  const { name, description, price, image, categoryId } = validatedFields.data;
+  const { name, description, price, image, categoryId, status } = validatedFields.data;
   if (!image || image.size === 0) {
     throw new Error('Image is required.');
   }
@@ -107,6 +108,7 @@ export async function createProduct(formData: FormData) {
       price,
       imageUrl: imageUrl!,
       categoryId,
+      status: status || 'available',
     },
   });
 
@@ -132,7 +134,7 @@ export async function updateProduct(id: string, formData: FormData) {
     throw new Error('Invalid product data.');
   }
 
-  const { name, description, price, image, categoryId } = validatedFields.data;
+  const { name, description, price, image, categoryId, status } = validatedFields.data;
 
   let imageUrl: string | undefined = undefined;
   if (image && image.size > 0) {
@@ -147,6 +149,7 @@ export async function updateProduct(id: string, formData: FormData) {
       price,
       imageUrl: imageUrl || product.imageUrl,
       categoryId,
+      status: status || 'available',
     },
   });
 

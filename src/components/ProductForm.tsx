@@ -34,6 +34,7 @@ const productFormSchema = z.object({
   price: z.coerce.number().positive('Price must be a positive number.'),
   image: z.instanceof(File).optional(),
   categoryId: z.string().min(1, 'Please select a category.'),
+  status: z.string().optional(),
 });
 
 type ProductFormValues = z.infer<typeof productFormSchema>;
@@ -72,6 +73,7 @@ export function ProductForm({ product, action, submitButtonText, categories }: P
       description: product?.description ?? '',
       price: product?.price ?? 0,
       categoryId: product?.categoryId ?? '',
+      status: (product as any)?.status ?? 'available',
     },
   });
 
@@ -106,6 +108,9 @@ export function ProductForm({ product, action, submitButtonText, categories }: P
             formData.append('image', values.image);
           }
           formData.append('categoryId', values.categoryId);
+          if (values.status) {
+            formData.append('status', values.status);
+          }
           formAction(formData);
         })}
       >
@@ -165,6 +170,27 @@ export function ProductForm({ product, action, submitButtonText, categories }: P
                           {...rest}
                         />
                       </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="status"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Status</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select status" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="available">Tersedia</SelectItem>
+                          <SelectItem value="unavailable">Habis</SelectItem>
+                        </SelectContent>
+                      </Select>
                       <FormMessage />
                     </FormItem>
                   )}
