@@ -127,9 +127,9 @@ export default async function Home({
               <div className="bg-white/10 backdrop-blur-md p-6 rounded-lg border border-white/20">
                 <h3 className="font-bold text-xl mb-4 text-accent">Alamat</h3>
                 <p className="text-white/90">
-                  Jalan Raya Cetak No. 88<br/>
-                  Jakarta Barat, DKI Jakarta<br/>
-                  Indonesia, 11000
+                  Jl. Kinibalu No.21, Wr 05<br/>
+                  Mlajah, Kec. Bangkalan, Kabupaten Bangkalan<br/>
+                  Jawa Timur 69116
                 </p>
               </div>
 
@@ -145,8 +145,7 @@ export default async function Home({
               <div className="bg-white/10 backdrop-blur-md p-6 rounded-lg border border-white/20">
                 <h3 className="font-bold text-xl mb-4 text-accent">Jam Operasional</h3>
                 <p className="text-white/90">
-                  Senin - Jumat: 08.00 - 20.00 WIB<br/>
-                  Sabtu: 09.00 - 17.00 WIB<br/>
+                  Senin - Sabtu: 09.00 - 16.00 WIB<br/>
                   Minggu: Libur
                 </p>
               </div>

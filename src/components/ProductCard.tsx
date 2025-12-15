@@ -28,12 +28,6 @@ type ProductCardProps = {
 };
 
 export default function ProductCard({ product, session }: ProductCardProps) {
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('id-ID', {
-      style: 'currency',
-      currency: 'IDR',
-    }).format(price);
-  };
 
   const handleDelete = async () => {
     try {
@@ -75,7 +69,6 @@ export default function ProductCard({ product, session }: ProductCardProps) {
             {product.name}
           </CardTitle>
           <div className="flex items-center justify-between mt-3">
-             <p className="text-xl font-bold text-primary">{formatPrice(product.price)}</p>
              <span className={`px-2 py-1 text-xs rounded-full border ${
                (product as any).status === 'available'
                  ? 'bg-green-100 text-green-700 border-green-200'

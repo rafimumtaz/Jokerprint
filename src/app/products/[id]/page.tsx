@@ -49,7 +49,6 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
         </CardHeader>
         <CardContent className="p-6">
           <CardTitle className="mb-4 font-headline text-3xl md:text-4xl">{product.name}</CardTitle>
-          <p className="mb-6 text-3xl font-bold">{formatPrice(product.price)}</p>
           <p className="text-muted-foreground">{product.description}</p>
         </CardContent>
       </Card>

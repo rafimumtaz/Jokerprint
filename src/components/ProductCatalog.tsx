@@ -125,7 +125,7 @@ export default function ProductCatalog({
               className="data-[state=checked]:bg-primary"
             />
             <Label htmlFor="available-mode" className="cursor-pointer text-sm font-medium">
-              Tersedia Saja
+              Tersedia
             </Label>
           </div>
         </div>
