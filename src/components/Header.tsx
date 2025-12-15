@@ -13,7 +13,7 @@ export default async function Header() {
       <div className="container flex h-20 items-center justify-between">
         <Link href="/" className="flex items-center space-x-2">
            {/* Logo - assuming it's available in public/LOGO.png */}
-           <div className="relative h-10 w-10 overflow-hidden rounded-full">
+           <div className="relative h-10 w-20 overflow-hidden">
              <Image src="/LOGO.png" alt="JokerDigiPrint Logo" fill className="object-cover" />
            </div>
           <span className="font-headline text-2xl font-bold text-primary">JokerDigiPrint</span>
