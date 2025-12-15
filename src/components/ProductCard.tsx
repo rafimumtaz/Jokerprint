@@ -74,7 +74,16 @@ export default function ProductCard({ product, session }: ProductCardProps) {
           <CardTitle className="mb-2 font-headline text-lg group-hover:underline">
             {product.name}
           </CardTitle>
-          <p className="mt-3 text-2xl font-bold">{formatPrice(product.price)}</p>
+          <div className="flex items-center justify-between mt-3">
+             <p className="text-xl font-bold text-primary">{formatPrice(product.price)}</p>
+             <span className={`px-2 py-1 text-xs rounded-full border ${
+               (product as any).status === 'available'
+                 ? 'bg-green-100 text-green-700 border-green-200'
+                 : 'bg-red-100 text-red-700 border-red-200'
+             }`}>
+               {(product as any).status === 'available' ? 'Tersedia' : 'Habis'}
+             </span>
+          </div>
         </CardContent>
       </Link>
       {isAdmin && (

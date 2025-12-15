@@ -1,0 +1,68 @@
+
+> nextn@0.1.0 dev
+> next dev -p 9002
+
+   ▲ Next.js 15.3.3
+   - Local:        http://localhost:9002
+   - Network:      http://192.168.0.2:9002
+
+ ✓ Starting...
+ ✓ Ready in 1805ms
+ ○ Compiling / ...
+ ✓ Compiled / in 13.7s (2498 modules)
+Error: Route "/" used `searchParams.query`. `searchParams` should be awaited before using its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at Home (src/app/page.tsx:32:16)
+  30 |   searchParams?: { query?: string };
+  31 | }) {
+> 32 |   const query = searchParams?.query || '';
+     |                ^
+  33 |   const session = await getSession();
+  34 |
+  35 |   // Fetch data
+[next-auth][warn][NEXTAUTH_URL]
+https://next-auth.js.org/warnings#nextauth_url
+[next-auth][warn][NO_SECRET]
+https://next-auth.js.org/warnings#no_secret
+ ⨯ Error [PrismaClientInitializationError]:
+Invalid `prisma.product.findMany()` invocation:
+
+
+error: Environment variable not found: DATABASE_URL.
+  -->  schema.prisma:10
+   |
+ 9 |   provider = "mysql"
+10 |   url      = env("DATABASE_URL")
+   |
+
+Validation Error Count: 1
+    at <unknown> (-->  schema.prisma:10)
+    at async Home (src/app/page.tsx:36:19)
+  34 |
+  35 |   // Fetch data
+> 36 |   const products = await getProducts(query);
+     |                   ^
+  37 |   const categories = await getCategories();
+  38 |
+  39 |   return ( {
+  clientVersion: '6.19.0',
+  errorCode: undefined,
+  retryable: undefined,
+  digest: '3239763276'
+}
+ GET / 500 in 16736ms
+ ✓ Compiled in 5.8s (483 modules)
+ ✓ Compiled in 1665ms (2498 modules)
+[next-auth][warn][NEXTAUTH_URL]
+https://next-auth.js.org/warnings#nextauth_url
+[next-auth][warn][NO_SECRET]
+https://next-auth.js.org/warnings#no_secret
+Database unavailable, using mock data for display.
+ GET / 200 in 1394ms
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 571ms (2488 modules)
+ GET /uploads/placeholder.jpg 404 in 693ms
+ ⨯ The requested resource isn't a valid image for /uploads/placeholder.jpg received text/html; charset=utf-8
+ GET /uploads/placeholder.jpg 404 in 47ms
+ ⨯ The requested resource isn't a valid image for /uploads/placeholder.jpg received text/html; charset=utf-8
+ GET /uploads/placeholder.jpg 404 in 40ms
+ ⨯ The requested resource isn't a valid image for /uploads/placeholder.jpg received text/html; charset=utf-8
