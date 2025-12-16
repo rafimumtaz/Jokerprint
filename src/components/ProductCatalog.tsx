@@ -18,6 +18,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Filter, ChevronDown } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { Search } from '@/components/Search';
 
 type ProductCatalogProps = {
   initialProducts: (Product & { category?: Category })[];
@@ -68,12 +69,12 @@ export default function ProductCatalog({
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between bg-card p-4 rounded-lg shadow-sm border border-border/50">
-        <div className="flex items-center gap-2">
-            <h2 className="text-xl font-headline font-semibold text-primary">Filter Produk</h2>
+      <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between bg-card p-4 rounded-lg shadow-sm border border-border/50">
+        <div className="flex-1 w-full md:max-w-md">
+            <Search />
         </div>
 
-        <div className="flex flex-wrap items-center gap-4">
+        <div className="flex flex-wrap items-center gap-4 w-full md:w-auto justify-end">
           {/* Category Filter */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
